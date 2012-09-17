@@ -9,6 +9,7 @@ use Test::Mock::Guard qw/mock_guard/;
     package Bench;
     use parent 'Teng';
     __PACKAGE__->load_plugin('Lookup');
+    __PACKAGE__->load_plugin('LookupPK', {pk => 'id'});
     __PACKAGE__->load_plugin('SingleBySQL');
 
     package Bench::Schema;
@@ -42,6 +43,7 @@ cmpthese(10000 => +{
     single_by_sql   => sub {$db->single_by_sql('SELECT id,name,age FROM user WHERE id = ?', [1], 'user')},
     lookup          => sub {$db->lookup('user', +{id => 1})},
     lookup_arrayref => sub {$db->lookup('user', [id => 1])},
+    lookup_pk       => sub {$db->lookup_pk('user', 1)},
 }, 'all');
 
 __END__
